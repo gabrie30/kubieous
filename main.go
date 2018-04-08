@@ -29,6 +29,9 @@ func main() {
 	for {
 		pods, err := clientset.CoreV1().Pods("").List(metav1.ListOptions{})
 
+		if err != nil {
+			panic(err.Error())
+		}
 		// Loop over all the pods in all the namespaces
 		for _, pod := range pods.Items {
 			// Loop over all the containers within a pod
@@ -41,10 +44,6 @@ func main() {
 					fmt.Println("Container Restarts:", container.RestartCount)
 				}
 			}
-		}
-
-		if err != nil {
-			panic(err.Error())
 		}
 
 		time.Sleep(5 * time.Second)
