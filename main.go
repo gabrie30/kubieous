@@ -10,7 +10,6 @@ import (
 func main() {
 
 	fmt.Println("starting kubieous...")
-	fmt.Println("")
 
 	// How often should the checks be performed
 	podCheckTimer := time.NewTicker(5 * time.Second)
