@@ -12,8 +12,10 @@ func main() {
 	fmt.Println("starting kubieous...")
 
 	// How often should the checks be performed
-	podCheckTimer := time.NewTicker(5 * time.Second)
-	nodeCheckTimer := time.NewTicker(10 * time.Second)
+	podCheckTimer := time.NewTicker(30 * time.Second)
+	nodeCheckTimer := time.NewTicker(60 * time.Second)
+
+	checks.PodEventStream()
 
 	// Montoring Loop
 	for {
@@ -22,6 +24,5 @@ func main() {
 			go checks.Pods()
 		case _ = <-nodeCheckTimer.C:
 			go checks.Nodes()
-		}
 	}
 }
