@@ -14,6 +14,7 @@ func main() {
 	// How often should the checks be performed
 	podCheckTimer := time.NewTicker(30 * time.Second)
 	nodeCheckTimer := time.NewTicker(60 * time.Second)
+	hpaCheckTimer := time.NewTicker(5 * time.Second)
 
 	checks.PodEventStream()
 
@@ -24,5 +25,7 @@ func main() {
 			go checks.Pods()
 		case _ = <-nodeCheckTimer.C:
 			go checks.Nodes()
+		case _ = <-hpaCheckTimer.C:
+			go checks.HPA()
 	}
 }
