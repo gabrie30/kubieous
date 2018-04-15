@@ -11,10 +11,11 @@ var (
 	channelName = os.Getenv("SLACK_CHANNEL")
 )
 
-func main() {
+// Slack sends message to slack channel
+func Slack(msg string) {
 
 	api := slack.New(token)
-	err := api.ChatPostMessage(channelName, "Hello, world!", nil)
+	err := api.ChatPostMessage(channelName, msg, nil)
 	if err != nil {
 		panic(err)
 	}
