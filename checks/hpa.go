@@ -44,10 +44,14 @@ func handleEventz(event watch.Event) {
 	if hpa.Status.CurrentReplicas > hpa.Status.DesiredReplicas {
 		fmt.Println(hpa.ObjectMeta.Namespace + " is scaling DOWN")
 		fmt.Println("Current VS Desired Replicas: ", hpa.Status.CurrentReplicas, hpa.Status.DesiredReplicas)
-		fmt.Println("Current CPU utilization: ", *hpa.Status.CurrentCPUUtilizationPercentage)
+		if hpa.Status.CurrentCPUUtilizationPercentage != nil {
+			fmt.Println("Current CPU utilization: ", *hpa.Status.CurrentCPUUtilizationPercentage)
+		}
 	} else if hpa.Status.CurrentReplicas < hpa.Status.DesiredReplicas {
-		fmt.Println(hpa.ObjectMeta.Namespace + " is scaling up")
+		fmt.Println(hpa.ObjectMeta.Namespace + " is scaling UP")
 		fmt.Println("Current VS Desired Replicas: ", hpa.Status.CurrentReplicas, hpa.Status.DesiredReplicas)
-		fmt.Println("Current CPU utilization: ", *hpa.Status.CurrentCPUUtilizationPercentage)
+		if hpa.Status.CurrentCPUUtilizationPercentage != nil {
+			fmt.Println("Current CPU utilization: ", *hpa.Status.CurrentCPUUtilizationPercentage)
+		}
 	}
 }
