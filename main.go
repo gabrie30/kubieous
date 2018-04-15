@@ -27,5 +27,6 @@ func main() {
 			go checks.Nodes()
 		case _ = <-hpaCheckTimer.C:
 			go checks.HPA()
+		}
 	}
 }
