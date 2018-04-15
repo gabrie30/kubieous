@@ -5,6 +5,7 @@ import (
 
 	"k8s.io/api/autoscaling/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 )
@@ -29,17 +30,24 @@ func HPA() {
 
 	hpaWatch, _ := clientset.AutoscalingV1().HorizontalPodAutoscalers("").Watch(metav1.ListOptions{})
 
-	data := <-hpaWatch.ResultChan()
+	for {
+		select {
+		case event := <-hpaWatch.ResultChan():
+			handleEventz(event)
+		}
+	}
+}
 
-	hpa := data.Object.(*v1.HorizontalPodAutoscaler)
+func handleEventz(event watch.Event) {
+	hpa := event.Object.(*v1.HorizontalPodAutoscaler)
 
 	if hpa.Status.CurrentReplicas > hpa.Status.DesiredReplicas {
 		fmt.Println(hpa.ObjectMeta.Namespace + " is scaling DOWN")
 		fmt.Println("Current VS Desired Replicas: ", hpa.Status.CurrentReplicas, hpa.Status.DesiredReplicas)
-		fmt.Println("Current CPU utilization: ", hpa.Status.CurrentCPUUtilizationPercentage)
+		fmt.Println("Current CPU utilization: ", *hpa.Status.CurrentCPUUtilizationPercentage)
 	} else if hpa.Status.CurrentReplicas < hpa.Status.DesiredReplicas {
 		fmt.Println(hpa.ObjectMeta.Namespace + " is scaling up")
 		fmt.Println("Current VS Desired Replicas: ", hpa.Status.CurrentReplicas, hpa.Status.DesiredReplicas)
-		fmt.Println("Current CPU utilization: ", hpa.Status.CurrentCPUUtilizationPercentage)
+		fmt.Println("Current CPU utilization: ", *hpa.Status.CurrentCPUUtilizationPercentage)
 	}
 }
